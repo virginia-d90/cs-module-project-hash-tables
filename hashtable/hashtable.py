@@ -210,20 +210,6 @@ class HashTable:
         """
         # Your code here
 
-        # new_table = HashTable(new_capacity) #need to make a new table with larger capacity
-        
-
-        # for entry in self.table:#loop through the current(soon to be old) list
-        #     new_table.put(entry.key, entry.value) # adds entry from old table to the new table
-        #     if entry.next:#check for other entries that need to be transferred 
-        #         current = entry #sets the most recent entry as the head
-
-        #         while current.next: 
-        #             current = current.next #set the head as the next
-        #             new_table.put(current.key, current.value)#add new head(aka new entry)
-
-        # self.table = new_table.table #table has been fully transferred
-        # self.capacity = new_table.capacity
 
         old_table = self.table
         old_capacity = self.capacity
@@ -234,7 +220,7 @@ class HashTable:
         for index in range(old_capacity): #loop through the entries of the old table
             entry = old_table[index] 
             while entry is not None: # while there are still entries to be transferred
-                self.put(entry.key, entry.value)
+                self.put(entry.key, entry.value)#add entry to resized table 
                 entry = entry.next #advance to the next entry
             
 

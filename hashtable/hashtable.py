@@ -164,13 +164,13 @@ class HashTable:
                 prev = None
 
                 while current.next is not None and current.key != key:#look through entries until found or all entries have been searched
-                    prev = current
-                    current = current.next
+                    prev = current #key becomes the previous item
+                    current = current.next # next entry becomes the current entry
                 if current.key == key: # key is found
-                    prev.next = current.next 
+                    prev.next = current.next #removes any reference to the key
                     self.count -= 1
                     return current.value
-                else:
+                else: #key was not found
                     return None
 
 

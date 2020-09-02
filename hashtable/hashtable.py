@@ -147,42 +147,31 @@ class HashTable:
         #DAY 2
         index = self.hash_index(key)
         current = self.table[index]
-        head_entry = True
-        prev_entry = None
 
-        while current is not None: #at least one entry exists
-            if current.key == key: #item to be deleted has been found
-                if head_entry: #if it is the head
-                    if current.next == None: #it is the only entry 
+        if current.key == key:#if entry to delete is the first in the list(the head)
+            if current.next == None:#there are no other entries in the list
+                self.table[index] = None #erase reference to entry
+                self.count -= 1 #decrement the load
+            else: #there are other entries in the list
+                new_head = current.next #new head will be the second entry in list
+                current.next = None #remove reference to old head
+                current = new_head #assign current to the new head
+                self.count -= 1
+        else:#entry was not the head or is not found
+            if current == None:#there are no entries for that index
+                return None
+            else:
+                prev = None
 
-                        self.table[index] = None #removes reference
-                        current = None #???UNSURE IF THIS IS REDUNDANT???
-                        head_entry = False
-                        self.count -= 1
-
-                    else:#other entries still exist
-
-                        self.table[index] = current.next #???sets head as the next entry???
-                        current = None
-                        head_entry = False
-                        self.count -= 1
-                else:#it is another entry in the list
-                    if current.next == None: #it is the last entry in the list
-                        prev_entry.next == None
-                        current = None
-                        self.count -=1
-                    else:
-                        prev_entry.next == current.next #erases connections to other entries
-                        current = None
-                        self.count -=1
-                return current
-
-         
-
-
-
-
-
+                while current.next is not None and current.key != key:#look through entries until found or all entries have been searched
+                    prev = current
+                    current = current.next
+                if current.key == key: # key is found
+                    prev.next = current.next 
+                    self.count -= 1
+                    return current.value
+                else:
+                    return None
 
 
     def get(self, key):

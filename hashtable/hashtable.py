@@ -121,6 +121,9 @@ class HashTable:
                     self.count += 1 
                     return
                 multiple = multiple.next #increments the while loop
+
+        if self.get_load_factor() > 0.7:#monitor how full the table is and resize if needed
+            self.resize(self.capacity * 2)#double the size of the table
     
 
 
@@ -154,24 +157,27 @@ class HashTable:
 
                         self.table[index] = None #removes reference
                         current = None #???UNSURE IF THIS IS REDUNDANT???
+                        head_entry = False
+                        self.count -= 1
 
                     else:#other entries still exist
 
                         self.table[index] = current.next #???sets head as the next entry???
-                        #entries = None
-
+                        current = None
+                        head_entry = False
+                        self.count -= 1
                 else:#it is another entry in the list
                     if current.next == None: #it is the last entry in the list
                         prev_entry.next == None
                         current = None
+                        self.count -=1
                     else:
                         prev_entry.next == current.next #erases connections to other entries
                         current = None
-                
-                return
+                        self.count -=1
+                return current
 
-            head_entry = False
-            if current.next 
+         
 
 
 
@@ -215,7 +221,35 @@ class HashTable:
         """
         # Your code here
 
-        pass
+        # new_table = HashTable(new_capacity) #need to make a new table with larger capacity
+        
+
+        # for entry in self.table:#loop through the current(soon to be old) list
+        #     new_table.put(entry.key, entry.value) # adds entry from old table to the new table
+        #     if entry.next:#check for other entries that need to be transferred 
+        #         current = entry #sets the most recent entry as the head
+
+        #         while current.next: 
+        #             current = current.next #set the head as the next
+        #             new_table.put(current.key, current.value)#add new head(aka new entry)
+
+        # self.table = new_table.table #table has been fully transferred
+        # self.capacity = new_table.capacity
+
+        old_table = self.table
+        old_capacity = self.capacity
+
+        self.table = [None] * new_capacity
+        self.capacity = new_capacity
+
+        for index in range(old_capacity): #loop through the entries of the old table
+            entry = old_table[index] 
+            while entry is not None: # while there are still entries to be transferred
+                self.put(entry.key, entry.value)
+                entry = entry.next #advance to the next entry
+            
+
+
 
 if __name__ == "__main__":
     ht = HashTable(8)

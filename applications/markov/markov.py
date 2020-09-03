@@ -31,7 +31,7 @@ start_words = []
 end_words = []
 frequency_dict = {}
 
-for index,word in enumerate(words):
+for index,word in enumerate(words): #need enumerate to track the length of words list
     if word not in frequency_dict:
         if index < len(words) - 1:
             frequency_dict[word] = [words[index + 1]]

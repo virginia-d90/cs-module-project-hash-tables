@@ -10,7 +10,7 @@ def slowfun_too_slow(x, y):
 
     return v
 
-# cache = {}
+
 result = {}
 def slowfun(x, y):
     """
@@ -19,10 +19,6 @@ def slowfun(x, y):
     """
     # Your code here
 
-    # if(x, y) not in cache:
-    #     cache[(x,y)] = slowfun_too_slow(x, y)
-
-    # return cache[(x,y)]
     if (x,y)not in result:
         v = math.pow(x, y)
         v = math.factorial(v)

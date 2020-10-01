@@ -1,5 +1,26 @@
+import re
 def word_count(s):
     # Your code here
+    # s is a string
+    # will return a dictionary where key = word and value = number of occurences
+    # all words should be lowercase
+    #ignore special characters >>> 
+    counted = {}
+    s = s.split()
+
+    for word in s:
+        word = "".join(char for char in word if char.isalpha() or char == "'").lower()
+
+        if word == "":
+            continue
+        if word in counted:
+            counted[word] += 1
+        else:
+            counted[word] = 1
+    return counted
+   
+
+
 
 
 

@@ -20,9 +20,16 @@ class HashTable:
     Implement this.
     """
 
-    def __init__(self, capacity):
+    def __init__(self, capacity=MIN_CAPACITY):
         # Your code here
+        #DAY 1
+        # self.capacity = capacity
+        # self.storage = [None] * self.capacity
 
+        #DAY2
+        self.capacity = capacity
+        self.table = [None] * capacity #changed name from day 1
+        self.count = 0 #counter to keep track of number of entries in table
 
     def get_num_slots(self):
         """
@@ -35,6 +42,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        return self.capacity 
 
 
     def get_load_factor(self):
@@ -44,7 +52,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        return self.count / self.capacity #determines how full the table is
 
     def fnv1(self, key):
         """
@@ -54,7 +62,7 @@ class HashTable:
         """
 
         # Your code here
-
+        pass
 
     def djb2(self, key):
         """
@@ -63,6 +71,16 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        # byte_arr= key.encode('utf-8')
+
+        # for b in byte_arr:
+        #     hash = ((hash * 33) ^ b) % 0x100000000
+        for i in key:
+            hash = (hash * 33) + ord(i)
+        
+        return hash
+
 
 
     def hash_index(self, key):
@@ -82,6 +100,33 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        #DAY 1
+        # self.storage[self.hash_index(key)] = value
+
+        #DAY 2
+        index = self.hash_index(key)
+    
+        if self.table[index] is None: #this will be the first entry at a given index
+            self.table[index] = HashTableEntry(key, value) #creates entry at given index
+            self.count += 1 #keep track of entries in table
+        else:#there is already at least one entry at this index
+            multiple = self.table[index]
+
+            while multiple is not None:
+                if multiple.key == key: #check to see if key already exists
+                   multiple.value = value #overrides the previous value
+                   return
+                if multiple.next is None: #last entry in list
+                    multiple.next = HashTableEntry(key, value) #adds new entry
+                    self.count += 1 
+                    return
+                multiple = multiple.next #increments the while loop
+
+        if self.get_load_factor() > 0.7:#monitor how full the table is and resize if needed
+            self.resize(self.capacity * 2)#double the size of the table
+    
+
+
 
 
     def delete(self, key):
@@ -93,6 +138,40 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        #DAY 1
+        # try:
+        #     self.storage[self.hash_index(key)] = None
+        # except KeyError:
+        #     return print('Key not found')
+
+        #DAY 2
+        index = self.hash_index(key)
+        current = self.table[index]
+
+        if current.key == key:#if entry to delete is the first in the list(the head)
+            if current.next == None:#there are no other entries in the list
+                self.table[index] = None #erase reference to entry
+                self.count -= 1 #decrement the load
+            else: #there are other entries in the list
+                new_head = current.next #new head will be the second entry in list
+                current.next = None #remove reference to old head
+                current = new_head #assign current to the new head
+                self.count -= 1
+        else:#entry was not the head or is not found
+            if current == None:#there are no entries for that index
+                return None
+            else:
+                prev = None
+
+                while current.next is not None and current.key != key:#look through entries until found or all entries have been searched
+                    prev = current #key becomes the previous item
+                    current = current.next # next entry becomes the current entry
+                if current.key == key: # key is found
+                    prev.next = current.next #removes any reference to the key
+                    self.count -= 1
+                    return current.value
+                else: #key was not found
+                    return None
 
 
     def get(self, key):
@@ -104,6 +183,22 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        #DAY 1
+        # try:
+        #     return self.storage[self.hash_index(key)]
+        # except KeyError:
+        #     return None
+
+        #DAY 2
+        index = self.hash_index(key)
+        entries = self.table[index] #not loving variable name, but haven't come up with something better
+
+        while entries is not None:# at least one entry exists for the index
+            if entries.key == key: #key exists at the index
+                return entries.value #return the value of the key
+            entries = entries.next #advance the loop
+        
+        return None #entry was not found/does not exist at index
 
 
     def resize(self, new_capacity):
@@ -114,6 +209,20 @@ class HashTable:
         Implement this.
         """
         # Your code here
+
+
+        old_table = self.table
+        old_capacity = self.capacity
+
+        self.table = [None] * new_capacity
+        self.capacity = new_capacity
+
+        for index in range(old_capacity): #loop through the entries of the old table
+            entry = old_table[index] 
+            while entry is not None: # while there are still entries to be transferred
+                self.put(entry.key, entry.value)#add entry to resized table 
+                entry = entry.next #advance to the next entry
+            
 
 
 

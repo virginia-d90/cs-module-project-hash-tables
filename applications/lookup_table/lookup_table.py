@@ -1,5 +1,6 @@
 # Your code here
-
+import math
+import random
 
 def slowfun_too_slow(x, y):
     v = math.pow(x, y)
@@ -9,6 +10,8 @@ def slowfun_too_slow(x, y):
 
     return v
 
+
+result = {}
 def slowfun(x, y):
     """
     Rewrite slowfun_too_slow() in here so that the program produces the same
@@ -16,8 +19,14 @@ def slowfun(x, y):
     """
     # Your code here
 
+    if (x,y)not in result:
+        v = math.pow(x, y)
+        v = math.factorial(v)
+        v //= (x + y)
+        v %= 982451653
 
-
+        result[(x,y)] = v
+    return result[(x,y)]
 # Do not modify below this line!
 
 for i in range(50000):
